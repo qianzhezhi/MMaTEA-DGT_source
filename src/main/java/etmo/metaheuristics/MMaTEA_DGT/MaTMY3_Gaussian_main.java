@@ -54,7 +54,7 @@ public class MaTMY3_Gaussian_main {
         int problemStart = PROBLEM_START;
         int problemEnd = PROBLEM_END;
         int times = PROBLEM_REPEAT_TIME;
-        String run_metric = args[3];
+
 
         String ALGO_NAME = "MaTMY3_2";
         String fileName = ALGO_NAME + "_x" + times + "_" + benchmarkName;
@@ -191,15 +191,7 @@ public class MaTMY3_Gaussian_main {
         algorithm = (MtoAlgorithm) algorithmClass
                     .getDeclaredConstructor(ProblemSet.class)
                     .newInstance(problemSet);
-        String TRANSFER_PROBABILITY_STR="";
-        try {
-            TRANSFER_PROBABILITY_STR = readFromFile("./.TRANSFER_PROBABILITY");
-//            System.out.println("从文件获取到的TRANSFER_PROBABILITY为"+TRANSFER_PROBABILITY_STR);
-        } catch (IOException e) {
-            System.out.println("读取文件时发生错误");
-            e.printStackTrace();
-        }
-        Double TRANSFER_PROBABILITY= Double.valueOf(TRANSFER_PROBABILITY_STR);
+
 		algorithm.setInputParameter("populationSize", MAX_POPULATION_SIZE);
 		algorithm.setInputParameter("maxEvaluations", MAX_EVALUATION_PER_INDIVIDUAL * problemSet.size() * MAX_POPULATION_SIZE);
         algorithm.setInputParameter("XType", CROSSOVER_TYPE);

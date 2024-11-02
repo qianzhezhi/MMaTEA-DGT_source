@@ -347,14 +347,7 @@ public class MaTMY3_Gaussian extends MtoAlgorithm {
 ////        Vector.vecAdd_(tmpMean, means[taskID]);
 //        double[] tmpStd = population[assistTaskID].getStd();
 //        double[] newFeatures = Probability.sampleByNorm(tmpMean, tmpStd);
-        String run_mode="";
-        try {
-            run_mode = readFromFile("./.run_mode");
-//            System.out.println("从文件获取到的run_mode为"+run_mode);
-        } catch (IOException e) {
-            System.out.println("读取文件时发生错误");
-            e.printStackTrace();
-        }
+
 
         int j = PseudoRandom.randInt(0, population[assistTaskID].size() - 1);
         Solution child = null;
@@ -364,32 +357,7 @@ public class MaTMY3_Gaussian extends MtoAlgorithm {
         double[] tmpStd;
         double[] newFeatures;
 
-        if (run_mode=="SIT"){
 
-             child = SBXChildGenerating(taskID, assistTaskID, i);
-
-        }
-        else if (run_mode=="NGT"){
-//             child = new Solution(population[assistTaskID].get(j));
-             tmpMean = population[assistTaskID].getMean();
-             tmpStd = population[assistTaskID].getStd();
-             newFeatures = Probability.sampleByNorm(tmpMean, tmpStd);
-
-            Vector.vecClip_(newFeatures, 0.0, 1.0);
-            child.setDecisionVariables(newFeatures);
-
-        }
-        else if (run_mode=="SGT"){
-//            child = new Solution(population[assistTaskID].get(j));
-            tmpMean = population[taskID].getMean();
-            tmpStd = population[assistTaskID].getStd();
-            newFeatures = Probability.sampleByNorm(tmpMean, tmpStd);
-            Vector.vecClip_(newFeatures, 0.0, 1.0);
-            child.setDecisionVariables(newFeatures);
-
-        }
-        else
-        {
             double factor = tP[taskID];
             tmpMean = means[taskID];
             Vector.vecAdd_(tmpMean, Vector.vecElemMul(population[assistTaskID].getMean(), factor));
@@ -400,7 +368,7 @@ public class MaTMY3_Gaussian extends MtoAlgorithm {
             Vector.vecClip_(newFeatures, 0.0, 1.0);
             child.setDecisionVariables(newFeatures);
 
-        }
+
 
         // 3
 //        double factor = tP[taskID];
@@ -554,16 +522,9 @@ public class MaTMY3_Gaussian extends MtoAlgorithm {
             //     System.out.println(generation + ": " + transferredEliteCount + " / " + eliteCount);
             //     System.out.println(Arrays.toString(transferredEliteCounts[taskID]));
             // }
-            String run_mode="";
-            try {
-                run_mode = readFromFile("./.run_mode");
-//            System.out.println("从文件获取到的run_mode为"+run_mode);
-            } catch (IOException e) {
-                System.out.println("读取文件时发生错误");
-                e.printStackTrace();
-            }
+
             String result = "generation="+generation +";ATP="+tP[taskID]+ ": " + transferredEliteCount + " / " + eliteCount; // 假设这是要输出的结果
-            String fileName = "C:\\Program Files\\JetBrains\\program\\CEC2021\\data\\ATP\\"+run_mode+"taskID="+taskID+".txt"; // 指定您自己创建的文件名
+            String fileName = "C:\\Program Files\\JetBrains\\program\\CEC2021\\data\\ATP\\taskID="+taskID+".txt"; // 指定您自己创建的文件名
 
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName,true))) {
                 writer.write(result); // 将结果写入文件
@@ -706,53 +667,10 @@ public class MaTMY3_Gaussian extends MtoAlgorithm {
     }
 
     int getAssistTaskID(int taskID) throws JMException {
-        String run_mode="";
-        try {
-            run_mode = readFromFile("./.run_mode");
-//            System.out.println("从文件获取到的run_mode为"+run_mode);
-        } catch (IOException e) {
-            System.out.println("读取文件时发生错误");
-            e.printStackTrace();
-        }
+
         int assistTaskID = taskID;
         double[] scores = new double[taskNum];
-        if (run_mode=="RAN"){
-            while (assistTaskID == taskID) {
-             assistTaskID = PseudoRandom.randInt(0, taskNum - 1);
-            }
-        }
-        else if (run_mode=="CMD"){
-//            double[] scores = new double[taskNum];
-            Arrays.setAll(scores, i -> distances[taskID][i]);
-            int res1 = Random.rouletteWheel(scores, taskID);
-            assistTaskID = res1 ;
-        }
-        else if (run_mode=="EMD"){
-//            double[] scores = new double[taskNum];
-            Arrays.setAll(scores, i -> 1 / distances2[taskID][i]);
-            int res2 = Random.rouletteWheel(scores, taskID);
-            assistTaskID = res2 ;
-        }
-        else if (run_mode=="EMDWR"){
-            int res1 = 0;
-            while (assistTaskID == taskID) {
-                res1 = PseudoRandom.randInt(0, taskNum - 1);
-            }
-            Arrays.setAll(scores, i -> 1 / distances2[taskID][i]);
-            int res2 = Random.rouletteWheel(scores, taskID);
-            assistTaskID = PseudoRandom.randDouble() < 0.5 ? res1 : res2;
-        }
-        else if(run_mode=="CMDR")
-        {
-            int res1 = 0;
-            while (assistTaskID == taskID) {
-                res1 = PseudoRandom.randInt(0, taskNum - 1);
-            }
-            Arrays.setAll(scores, i -> distances[taskID][i]);
-            int res2 = Random.rouletteWheel(scores, taskID);
-            assistTaskID = PseudoRandom.randDouble() < 0.5 ? res1 : res2;
-        }
-        else {
+
 //            double[] scores = new double[taskNum];
         // CMD
             Arrays.setAll(scores, i -> distances[taskID][i]);
@@ -779,7 +697,7 @@ public class MaTMY3_Gaussian extends MtoAlgorithm {
 //                e.printStackTrace();
 //            }
 
-        }
+
          // random
 //         while (assistTaskID == taskID) {
 //             assistTaskID = PseudoRandom.randInt(0, taskNum - 1);
@@ -861,26 +779,9 @@ public class MaTMY3_Gaussian extends MtoAlgorithm {
                     //     }
                     // }
                     // dist = Math.sqrt(dist);
-                    String run_metric="";
-                    try {
-                        run_metric = readFromFile("./.run_metric");
-//            System.out.println("从文件获取到的run_mode为"+run_mode);
-                    } catch (IOException e) {
-                        System.out.println("读取文件时发生错误");
-                        e.printStackTrace();
-                    }
-                    if (run_metric=="KL"){
-                        dist = Distance.getKLDivergence(means[srcTaskID], means[trgTaskID]);
-                    }
-                    else if(run_metric=="JS"){
-                        dist = Distance.getJSDivergence(means[srcTaskID], means[trgTaskID]);
-                    }
-                    else if(run_metric=="WD"){
-                        dist = Distance.getWassersteinDistance(means[srcTaskID], means[trgTaskID]);
-                    }
-                    else {
-                        dist = Distance.getCorrelationMatrixDistance(sigmas[srcTaskID], sigmas[trgTaskID]);
-                    }
+
+                    dist = Distance.getCorrelationMatrixDistance(sigmas[srcTaskID], sigmas[trgTaskID]);
+
                     // dist = Distance.getCosineSimilarity(eliteDirections[srcTaskID], eliteDirections[trgTaskID]);
                     // dist = (1 + dist) / 2 * -1;
                 } else {

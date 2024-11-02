@@ -27,13 +27,13 @@ public class MaTMY3_Gaussian_main {
     static final double DE_CR = 0.6;
     static final double DE_F = 0.5;
     static final boolean IS_MUTATE = false;
-//    static final double TRANSFER_PROBABILITY = 0.1;
+    static final double TRANSFER_PROBABILITY = 0.1;
     static final double MUTATION_PROBABILITY = 0.5;
     static final double ELITE_PART = 0.5;
 
     static final int PLOT_TASK_ID = 31;
 
-    //static final Benchmark BENCHMARK_TYPE = Benchmark.WCCI2020;
+    static final Benchmark BENCHMARK_TYPE = Benchmark.WCCI2020;
     static final int PROBLEM_START = 1;
     static final int PROBLEM_END = 10;
     static final int PROBLEM_REPEAT_TIME = 10;
@@ -50,22 +50,13 @@ public class MaTMY3_Gaussian_main {
     public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException, JMException {
         ProblemSet problemSet;
 
-        Benchmark benchmarkName;
+        Benchmark benchmarkName = BENCHMARK_TYPE;
         int problemStart = PROBLEM_START;
         int problemEnd = PROBLEM_END;
         int times = PROBLEM_REPEAT_TIME;
-        String run_mode = args[0];//args[0];//这里可以传入一个参数
-        String TRANSFER_PROBABILITY= args[1];//第二个参数
-        try {
-            benchmarkName = Benchmark.valueOf(args[2]);
-        } catch (IllegalArgumentException e) {
-            System.err.println("Invalid benchmark type. Available types: CEC2021, CEC2017, CEC2019, WCCI2020");
-            System.exit(1);
-            return;
-        }
         String run_metric = args[3];
 
-        String ALGO_NAME = "MaTMY3_2"+run_mode;
+        String ALGO_NAME = "MaTMY3_2";
         String fileName = ALGO_NAME + "_x" + times + "_" + benchmarkName;
         String folderPath;
         File folder;
@@ -82,18 +73,8 @@ public class MaTMY3_Gaussian_main {
             }
         }
 
-        System.out.println("Received:"+run_mode);
-        System.out.println("接收到的可能性参数为:"+TRANSFER_PROBABILITY);
-        System.out.println("使用的度量是:"+run_metric);
-        try {
-            writeToFile(run_mode, "./.run_mode");
-            writeToFile(TRANSFER_PROBABILITY, "./.TRANSFER_PROBABILITY");
-            writeToFile(run_metric, "./.run_metric");
-            System.out.println("设置run_mode和run_metric成功");
-        } catch (IOException e) {
-            System.out.println("设置run_mode失败");
-            e.printStackTrace();
-        }
+
+
         System.out.println("\nExperiment started -> " + fileName);
 
 
